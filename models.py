@@ -44,6 +44,7 @@ class Order(Base):
 
 class OrderLine(Base):
     __tablename__ = 'order_line'
+    id = Column(Integer, primary_key=True)
     order_id = Column(Integer, ForeignKey('my_order.id'))
     order = relationship('Order')
     product_id = Column(Integer, ForeignKey('product.id'))
