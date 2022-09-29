@@ -44,10 +44,14 @@ class Product(Base):
     id = Column(Integer, primary_key=True)
     name = Column("Pavadinimas", String)
     price = Column("Kaina", Float)
+    stock = Column("Kiekis sandėlyje", Integer)
 
     def __init__(self, name, price):
         self.name = name
         self.price = price
+
+    def __repr__(self):
+        return f"{self.id}: {self.name} ({self.price})"
 
 
 class Order(Base):
@@ -58,6 +62,7 @@ class Order(Base):
     status_id = Column(Integer, ForeignKey("status.id"))
     status = relationship("Status")
     order_date = Column("Data", String)
+    order_lines = relationship("OrderLine", back_populates="order")
 
     def __init__(self, customer_id, status_id, order_date):
         self.customer_id = customer_id
@@ -72,7 +77,12 @@ class OrderLine(Base):
     __tablename__ = 'order_line'
     id = Column(Integer, primary_key=True)
     order_id = Column(Integer, ForeignKey('my_order.id'))
-    order = relationship('Order')
+    order = relationship('Order', back_populates="order_lines")
     product_id = Column(Integer, ForeignKey('product.id'))
     product = relationship("Product")
     quantity = Column(Integer)
+
+    def __init__(self, order_id, product_id, quantity):
+        self.order_id = order_id
+        self.product_id = product_id
+        self.quantity = quantity

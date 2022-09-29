@@ -1,9 +1,12 @@
-from models import engine, Customer, Product, Status, Order
+from models import Base, engine, Customer, Product, Status, Order, OrderLine
 from sqlalchemy.orm import sessionmaker
 
 Session = sessionmaker(bind=engine)
 session = Session()
 """:type: sqlalchemy.orm.Session"""
+
+if __name__ == '__main__':
+    Base.metadata.create_all(engine)
 
 while True:
     choice = int(input("Pridėti:\n1 - pirkėją\n2 - produktą\n3 - statusą\n4 - užsakymą\n5 - rodyti užsakymą\n"))
@@ -52,6 +55,13 @@ while True:
             print(f"Užsakymas nr. {active_order.id}:")
             print(f"Klientas: {active_order.customer}")
             print(f"Būklė: {active_order.status}")
+            print("Užsakyti produktai:")
+            total = 0
+            for line in active_order.order_lines:
+                suma = line.product.price * line.quantity
+                total += suma
+                print(f"{line.product} - {line.quantity}, suma: {suma}")
+            print(f"Bendra suma: {total}")
             while True:
                 choice2 = input("a - keisti statusą\nb - pridėti produktus\nc - išeiti iš užsakymo\n")
                 match choice2:
@@ -62,6 +72,13 @@ while True:
                         status_id = int(input("Įveskite statuso ID: "))
                         active_order.status_id = status_id
                         session.commit()
+                    case "b":
+                        products = session.query(Product).all()
+                        for product in products:
+                            print(product)
+                        product_id = int(input("Įveskite produkto ID: "))
+                        quantity = int(input("Įveskite kiekį: "))
+                        order_line = OrderLine(active_order.id, product_id, quantity)
+                        active_order.order_lines.append(order_line)
+                        session.commit()
 
-if __name__ == '__main__':
-    Base.metadata.create_all(engine)
