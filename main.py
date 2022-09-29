@@ -81,4 +81,5 @@ while True:
                         order_line = OrderLine(active_order.id, product_id, quantity)
                         active_order.order_lines.append(order_line)
                         session.commit()
-
+                    case "c":
+                        break
