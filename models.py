@@ -18,11 +18,19 @@ class Customer(Base):
     l_name = Column("Pavardė", String)
     email = Column("El. pašto adresas", String)
 
+    def __init__(self, f_name, l_name, email):
+        self.f_name = f_name
+        self.l_name = l_name
+        self.email = email
+
 
 class Status(Base):
     __tablename__ = 'status'
     id = Column(Integer, primary_key=True)
     name = Column("Pavadinimas", String)
+
+    def __init__(self, name):
+        self.name = name
 
 
 class Product(Base):
@@ -30,6 +38,10 @@ class Product(Base):
     id = Column(Integer, primary_key=True)
     name = Column("Pavadinimas", String)
     price = Column("Kaina", Float)
+
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
 
 
 class Order(Base):
