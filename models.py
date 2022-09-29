@@ -23,6 +23,8 @@ class Customer(Base):
         self.l_name = l_name
         self.email = email
 
+    def __repr__(self):
+        return f"{self.id}: {self.f_name} {self.l_name}"
 
 class Status(Base):
     __tablename__ = 'status'
@@ -31,6 +33,10 @@ class Status(Base):
 
     def __init__(self, name):
         self.name = name
+
+
+    def __repr__(self):
+        return f"{self.id}: {self.name}"
 
 
 class Product(Base):
@@ -52,6 +58,14 @@ class Order(Base):
     status_id = Column(Integer, ForeignKey("status.id"))
     status = relationship("Status")
     order_date = Column("Data", String)
+
+    def __init__(self, customer_id, status_id, order_date):
+        self.customer_id = customer_id
+        self.status_id = status_id
+        self.order_date = order_date
+
+    def __repr__(self):
+        return f"{self.id}: {self.order_date}, {self.customer.f_name} {self.customer.l_name}, {self.status.name}"
 
 
 class OrderLine(Base):
